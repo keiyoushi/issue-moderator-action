@@ -13,7 +13,7 @@
     "test": "vitest --run",
     "test:integ": "vitest --config vitest.config.integ.ts",
     "build": "node esbuild.config.mjs",
-    "prepare": "npm run format && npm run test && npm run build"
+    "prepare": "pnpm run format && pnpm run test && pnpm run build"
   },
   "dependencies": {
     "@actions/core": "1.10.1",

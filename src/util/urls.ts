@@ -4,6 +4,7 @@ const EXCLUSION_LIST = [
   'github.com',
   'user-images.githubusercontent.com',
   'gist.github.com',
+  'keiyoushi.github.io',
 ];
 // Also file name extensions
 const EXCLUDED_DOMAINS = ['.md'];
