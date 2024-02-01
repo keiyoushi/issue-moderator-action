@@ -4,7 +4,7 @@ import { Issue, IssuesEvent } from '@octokit/webhooks-types/schema';
 import axios from 'axios';
 
 import { addDuplicateLabel, shouldIgnore } from '../util/issues';
-import { cleanUrl, urlsFromIssueBody } from '../util/urls';
+import { cleanUrl, urlsFromIssueBody, urlsFromString } from '../util/urls';
 
 interface Extension {
   name: string;
@@ -71,10 +71,9 @@ export async function checkForExistingSource() {
   }
 
   const requestUrl = cleanUrl(issueUrls[0]);
-  const isRequestUrl = (url: string) => cleanUrl(url) === requestUrl;
   const existingExtension = repository.find((extension) =>
     extension.sources.some((source) =>
-      source.baseUrl.split(', ').some(isRequestUrl),
+      urlsFromString(source.baseUrl).includes(requestUrl),
     ),
   );
   if (!existingExtension) {

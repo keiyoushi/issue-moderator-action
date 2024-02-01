@@ -9,9 +9,12 @@ const EXCLUSION_LIST = [
 // Also file name extensions
 const EXCLUDED_DOMAINS = ['.md'];
 
+export function urlsFromString(str: string): string[] {
+  return Array.from(str.matchAll(URL_REGEX)).map((url) => cleanUrl(url[0]));
+}
+
 export function urlsFromIssueBody(body: string): string[] {
-  const urls = Array.from(body.matchAll(URL_REGEX))
-    .map((url) => cleanUrl(url[0]))
+  const urls = urlsFromString(body)
     .filter((url) => !EXCLUSION_LIST.includes(url))
     .filter((url) => EXCLUDED_DOMAINS.every((domain) => !url.endsWith(domain)));
   return Array.from(new Set(urls));
