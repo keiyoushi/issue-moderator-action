@@ -51,28 +51,31 @@ export async function checkForDuplicateUrls() {
 
   const { repo } = github.context;
 
-  const results = await Promise.all(
-    labelsToCheck.map((label) =>
-      client.paginate(client.rest.issues.listForRepo, {
-        owner: repo.owner,
-        repo: repo.repo,
-        state: 'open',
-        labels: label,
-        per_page: 100,
-      }),
-    ),
-  );
-  const allOpenIssues = results.flat();
+  const qualifiers = `type:issue repo:${repo.owner}/${repo.repo} state:open label:"${labelsToCheck.join('","')}"`;
+  const promises = [];
+  // One search can have no more than 5 OR operators; regular expression `|` doesn't work
+  for (let i = 0; i < issueUrls.length; i += 6) {
+    const promise = client.rest.search.issuesAndPullRequests({
+      // Converting to regular expressions because text might fail to match when `www.` is removed
+      q: `${qualifiers} /${issueUrls
+        .slice(i, i + 6)
+        .map((url) => url.replaceAll('.', '\\.'))
+        .join('/ OR /')}/`,
+    });
+    promises.push(promise);
+  }
 
-  const duplicateIssues = allOpenIssues
-    .map((currIssue) => ({
-      number: currIssue.number,
-      urls: urlsFromIssueBody(currIssue.body ?? ''),
-    }))
+  const responses = await Promise.all(promises);
+  const filteredIssues = responses.flatMap((response) => response.data.items);
+
+  // Make sure the URL is not from the replies
+  const duplicateIssues = filteredIssues
     .filter((currIssue) => {
+      let urls: string[];
       return (
         currIssue.number !== issue.number &&
-        issueUrls.some((url) => currIssue.urls.includes(url))
+        (urls = urlsFromIssueBody(currIssue.body ?? '')) &&
+        issueUrls.some((url) => urls.includes(url))
       );
     })
     .map((currIssue) => '#' + currIssue.number);
