@@ -1,10 +1,10 @@
 {
-  "name": "@tachiyomiorg/issue-moderator-action",
-  "version": "2.6.0",
+  "name": "@keiyoushi/issue-moderator-action",
+  "version": "2.6.1",
   "description": "GitHub action to moderate issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tachiyomiorg/issue-moderator-action.git"
+    "url": "https://github.com/keiyoushi/issue-moderator-action.git"
   },
   "license": "MPL-2.0",
   "main": "dist/index.js",

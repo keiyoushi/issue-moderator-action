@@ -17,7 +17,7 @@ interface Source {
 }
 
 /**
- * Check if the requested URL(s) already exist as Tachiyomi sources.
+ * Check if the requested URL(s) already exist as sources.
  */
 export async function checkForExistingSource() {
   const payload = github.context.payload as IssuesEvent;
