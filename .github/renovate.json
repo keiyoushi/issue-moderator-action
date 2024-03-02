@@ -1,12 +1,12 @@
 {
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "labels": ["Dependencies"],
   "packageRules": [
     {
-      "groupName": "dependencies",
+      "groupName": "{{manager}} dependencies",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
     }
   ],
   "schedule": ["every sunday"],
-  "ignoreDeps": ["@types/node"]
+  "ignoreDeps": []
 }
