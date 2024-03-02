@@ -2,6 +2,7 @@ import { Octokit } from '@octokit/action';
 import { describe, expect, test } from 'vitest';
 
 import { baseIssueMetadata, waitForClosedIssue } from './util';
+import { deleteIssue } from '../src/util/issues';
 
 const octokit = new Octokit();
 
@@ -18,5 +19,7 @@ describe('Existing source check', () => {
 
     expect(issue.data.state).toStrictEqual('closed');
     expect(issue.data.state_reason).toStrictEqual('not_planned');
+
+    await deleteIssue(octokit, issue.data.node_id);
   });
 });
