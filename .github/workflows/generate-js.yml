@@ -44,7 +44,7 @@ jobs:
         with:
           add-paths: dist/
           commit-message: Generate JavaScript based on ${{ github.sha }}
-          author: GitHub <noreply@github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: github-actions/generate-js/${{ github.ref_name }}
           title: Generate JavaScript for branch `${{ github.ref_name }}`
           body: |
