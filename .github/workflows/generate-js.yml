@@ -31,7 +31,9 @@ jobs:
       - name: Create pull request with generated JavaScript
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
-          add-paths: dist/
+          add-paths: |
+            dist/
+            pnpm-lock.yaml
           commit-message: Generate JavaScript based on ${{ github.sha }}
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: github-actions/generate-js/${{ github.ref_name }}
