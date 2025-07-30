@@ -48,12 +48,12 @@ export async function checkForAutoClose() {
     if (failed.length > 0) {
       // Comment and close if failed any rule
       const infoMessage =
-        payload.action === 'opened' ? 'automatically closed' : 'not reopened';
+        issueData.data.state === 'open' ? 'automatically closed' : 'not reopened';
 
       // Avoid commenting about automatic closure if it was already closed
       const shouldComment =
         (payload.action === 'opened' && issueData.data.state === 'open') ||
-        (payload.action === 'edited' && issueData.data.state === 'closed');
+        (payload.action === 'edited');
 
       if (shouldComment) {
         const message = [
