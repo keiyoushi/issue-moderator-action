@@ -2,6 +2,7 @@ This action uses TypeScript and requires Node.js and pnpm to generate the JavaSc
 
 1. [Fork](https://github.com/keiyoushi/issue-moderator-action/fork) the repository.
 1. Open your fork, navigate to the Actions tab, and enable them.
+1. In your fork, navigate to `Settings > Actions > General > Workflow permissions` and enable write access for `GITHUB_TOKEN`.
 1. Create a new branch for your feature or bugfix. We will be using branch `feat-1` as an example.
 1. Push your changes to the branch.
 1. After a few minutes, the `github-actions/generate-js/feat-1` branch will be created in your fork. It will contain generated JavaScript files. There will also be a Pull Request in your repository. There is no need to merge it.
