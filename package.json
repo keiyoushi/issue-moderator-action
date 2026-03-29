@@ -16,7 +16,7 @@
     "prepare": "pnpm run format && pnpm run test && pnpm run build"
   },
   "dependencies": {
-    "@actions/core": "1.11.1",
+    "@actions/core": "3.0.0",
     "@actions/github": "6.0.1",
     "@octokit/webhooks-types": "7.6.1",
     "axios": "1.14.0"
