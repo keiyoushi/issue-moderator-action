@@ -23,8 +23,8 @@ devDependencies:
     specifier: 8.0.4
     version: 8.0.4
   '@tsconfig/node24':
-    specifier: 24.0.0
-    version: 24.0.0
+    specifier: 24.0.4
+    version: 24.0.4
   '@types/dedent':
     specifier: 0.7.2
     version: 0.7.2
@@ -963,8 +963,8 @@ packages:
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
     dev: true
 
-  /@tsconfig/node24@24.0.0:
-    resolution: {integrity: sha512-3/6Cr4dELEAucgPIr6ufY7yBYMi4ttZFOewABADNZ+bm4DUZl4dup2VBcBeP1ejj3QblrWVWux/1XcRv/ZVikA==}
+  /@tsconfig/node24@24.0.4:
+    resolution: {integrity: sha512-2A933l5P5oCbv6qSxHs7ckKwobs8BDAe9SJ/Xr2Hy+nDlwmLE1GhFh/g/vXGRZWgxBg9nX/5piDtHR9Dkw/XuA==}
     dev: true
 
   /@types/chai@5.2.3:
