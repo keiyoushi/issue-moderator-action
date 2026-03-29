@@ -9,6 +9,6 @@ This action uses TypeScript and requires Node.js and pnpm to generate the JavaSc
 1. Go to the Settings tab in your fork and change the default branch to `github-actions/generate-js/feat-1`. This way, you can test your changes in your fork.
 1. You can now try opening test issues in your fork to see how your changes work.
 1. You can keep pushing your changes to the `feat-1` branch. The changes will be applied to the `github-actions/generate-js/feat-1` branch automatically.
-1. Once you are ready to propose your changes, you can open a Pull Request from the `github-actions/generate-js/feat-1` branch to our `main` branch. You can still push changes to the `feat-1` branch, and your Pull Request will be updated automatically with the changes after a few minutes.
+1. Once you are ready to propose your changes, you can open a Pull Request from your `feat-1` branch to our `main` branch. There is no need to include the automatically generated files in your PR - this will be handled by a bot on our side.
 
 Keep in mind that the flow above is described for cases when you create a fork to contribute to this repository. If you maintain your own fork, changing the default branch is not desirable. However, the workflow can still help you with keeping your branches up-to-date. Whenever something is pushed to a branch, the workflow checks if the JavaScript files need to be updated. If so, it opens a Pull Request that you can merge.
