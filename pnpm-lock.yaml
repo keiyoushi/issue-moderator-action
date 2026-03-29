@@ -22,9 +22,9 @@ devDependencies:
   '@octokit/action':
     specifier: 7.0.2
     version: 7.0.2
-  '@tsconfig/node22':
-    specifier: 22.0.5
-    version: 22.0.5
+  '@tsconfig/node24':
+    specifier: 24.0.0
+    version: 24.0.0
   '@types/dedent':
     specifier: 0.7.2
     version: 0.7.2
@@ -951,8 +951,8 @@ packages:
     dev: true
     optional: true
 
-  /@tsconfig/node22@22.0.5:
-    resolution: {integrity: sha512-hLf2ld+sYN/BtOJjHUWOk568dvjFQkHnLNa6zce25GIH+vxKfvTgm3qpaH6ToF5tu/NN0IH66s+Bb5wElHrLcw==}
+  /@tsconfig/node24@24.0.0:
+    resolution: {integrity: sha512-3/6Cr4dELEAucgPIr6ufY7yBYMi4ttZFOewABADNZ+bm4DUZl4dup2VBcBeP1ejj3QblrWVWux/1XcRv/ZVikA==}
     dev: true
 
   /@types/chai@5.2.3:
