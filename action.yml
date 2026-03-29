@@ -91,6 +91,15 @@ inputs:
 
       *This is an automated action. If you think this is a mistake, please comment about it so the issue can be reopened if needed.*
 
+  url-search-sections:
+    required: false
+    description: >
+      A JSON-compliant string containing a list of issue sections to check for URLs. Applies to duplicate and existing checks.
+      If defined, only the specified sections are checked.
+      If not defined or if an empty list is provided, the whole issue body is checked.
+    default: |
+      []
+
   auto-close-rules:
     required: false
     description: |

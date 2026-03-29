@@ -39,7 +39,8 @@ export async function checkForDuplicateUrls() {
     return;
   }
 
-  const issueUrls = urlsFromIssueBody(issue.body);
+  const sectionsToCeck = JSON.parse(core.getInput('url-search-sections'))
+  const issueUrls = urlsFromIssueBody(issue.body, sectionsToCeck);
   if (issueUrls.length === 0) {
     core.info('No URLs found in the issue body');
     return;
@@ -74,7 +75,7 @@ export async function checkForDuplicateUrls() {
       let urls: string[];
       return (
         currIssue.number !== issue.number &&
-        (urls = urlsFromIssueBody(currIssue.body ?? '')) &&
+        (urls = urlsFromIssueBody(currIssue.body ?? '', sectionsToCeck)) &&
         issueUrls.some((url) => urls.includes(url))
       );
     })

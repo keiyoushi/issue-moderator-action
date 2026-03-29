@@ -58,6 +58,7 @@ If `member-token` is not provided, `repo-token` will be used to check user's mem
 | `existing-check-labels`   | Labels of the opened issues to do the check.                                                    |
 | `existing-check-repo-url` | URL of the JSON extension repository.                                                           |
 | `existing-check-comment`  | Comment body when the issue was detected to be of an existing source.                           |
+| `url-search-sections`     | Sections of the issue to check for URLs. Applies to both existing and duplicate checks.         |
 | `auto-close-rules`        | A JSON-compliant string containing a list of rules, where a rule consists of the content below. |
 | `auto-close-ignore-label` | Optional label name. If present, auto-close, duplicate-check, and existing-check are skipped.   |
 
@@ -83,6 +84,8 @@ to be added to your repository through issues.
 
 To enable it, you need to set `duplicate-check-enabled` to `true`
 and define the label that the action should check with `duplicate-check-label`.
+
+If you wish to check only specific sections of the issue, define the names of those sections with `url-search-sections`.
 
 ### Regex rules
 

@@ -50,7 +50,8 @@ export async function checkForExistingSource() {
     return;
   }
 
-  const issueUrls = urlsFromIssueBody(issue.body);
+  const sectionsToCeck = JSON.parse(core.getInput('url-search-sections'))
+  const issueUrls = urlsFromIssueBody(issue.body, sectionsToCeck);
   if (issueUrls.length === 0) {
     core.info('No URLs found in the issue body');
     return;

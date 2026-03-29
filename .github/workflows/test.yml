@@ -26,6 +26,8 @@ jobs:
           existing-check-enabled: true
           existing-check-labels: |
             ["enhancement", "question"]
+          url-search-sections: |
+            ["URL section"]
           auto-close-rules: |
             [
               {

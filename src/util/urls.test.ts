@@ -6,13 +6,13 @@ describe('urlsFromIssueBody', () => {
   it('extracts URLs', () => {
     (
       [
-        ['foo https://example.org bar', ['example.org']],
+        ['foo https://example.org bar', [], ['example.org']],
         [
-          'foo https://example.ORG google.co.UK bar',
+          'foo https://example.ORG google.co.UK bar', [],
           ['example.org', 'google.co.uk'],
         ],
         [
-          'foo http://stupidlylongtld.NORTHWESTERNMUTUAL',
+          'foo http://stupidlylongtld.NORTHWESTERNMUTUAL', [],
           ['stupidlylongtld.northwesternmutual'],
         ],
         [
@@ -35,29 +35,54 @@ describe('urlsFromIssueBody', () => {
     - [X] I have updated all installed extensions.
     - [X] I have checked if the source URL is not already updated by opening WebView.
     - [X] I will fill out all of the requested information in this form.`,
-          ['wings.sbs'],
+          [], ['wings.sbs'],
         ],
       ] as const
-    ).forEach(([body, expectedUrls]) => {
-      expect(urlsFromIssueBody(body)).toStrictEqual(expectedUrls);
+    ).forEach(([body, sections, expectedUrls]) => {
+      expect(urlsFromIssueBody(body, sections)).toStrictEqual(expectedUrls);
     });
   });
 
   it('excludes some URLs', () => {
     (
       [
-        ['foo https://tachiyomi.org/extensions bar', []],
-        ['foo https://github.com/tachiyomiorg bar', []],
-        ['foo user-images.githubusercontent.com/something bar', []],
-        ['foo www.gist.github.com/something bar', []],
+        ['foo https://tachiyomi.org/extensions bar', [], []],
+        ['foo https://github.com/tachiyomiorg bar', [], []],
+        ['foo user-images.githubusercontent.com/something bar', [], []],
+        ['foo www.gist.github.com/something bar', [], []],
         [
-          'foo https://github.com/tachiyomiorg/extensions/blob/master/README.md something',
+          'foo https://github.com/tachiyomiorg/extensions/blob/master/README.md something', [],
           [],
         ],
-        ['foo https://keiyoushi.github.io/extensions bar', []],
+        ['foo https://keiyoushi.github.io/extensions bar', [], []],
       ] as const
-    ).forEach(([body, expectedUrls]) => {
-      expect(urlsFromIssueBody(body)).toStrictEqual(expectedUrls);
+    ).forEach(([body, sections, expectedUrls]) => {
+      expect(urlsFromIssueBody(body, sections)).toStrictEqual(expectedUrls);
+    });
+  });
+
+  const sectionsExample =
+`### First
+one.tld
+### Middle
+www.two.tld
+### Empty
+just some text
+### Last
+https://three.tld
+`;
+
+  it('checks sections', () => {
+    (
+      [
+        [ sectionsExample, ['First'], ['one.tld']],
+        [ sectionsExample, ['Middle'], ['two.tld']],
+        [ sectionsExample, ['Last'], ['three.tld']],
+        [ sectionsExample, ['First', 'Last', 'Non-existent'], ['one.tld', 'three.tld']],
+        [ sectionsExample, ['Empty'], []],
+      ] as const
+    ).forEach(([body, sections, expectedUrls]) => {
+      expect(urlsFromIssueBody(body, sections)).toStrictEqual(expectedUrls);
     });
   });
 });
