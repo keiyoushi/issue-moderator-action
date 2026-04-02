@@ -70,14 +70,23 @@ export async function checkForExistingSource() {
     return;
   }
 
-  const requestUrl = cleanUrl(issueUrls[0]);
-  const existingExtension = repository.find((extension) =>
-    extension.sources.some((source) =>
-      urlsFromString(source.baseUrl).includes(requestUrl),
-    ),
-  );
+  let existingExtension = null;
+  let requestUrl = "";
+  for (let url of issueUrls) {
+    existingExtension = repository.find((extension) =>
+      extension.sources.some((source) =>
+        urlsFromString(source.baseUrl).includes(cleanUrl(url)),
+      ),
+    );
+
+    if (existingExtension) {
+      requestUrl = url;
+      break;
+    }
+  }
+
   if (!existingExtension) {
-    core.info(`Existing extension with the URL "${requestUrl}" was not found.`);
+    core.info(`No existing extensions were found for the provided URLs: ${issueUrls.join(", ")}.`);
     return;
   }
 
