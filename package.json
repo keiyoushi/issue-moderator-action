@@ -16,10 +16,10 @@
     "prepare": "pnpm run format && pnpm run test && pnpm run build"
   },
   "dependencies": {
-    "@actions/core": "3.0.0",
-    "@actions/github": "9.1.0",
+    "@actions/core": "3.0.1",
+    "@actions/github": "9.1.1",
     "@octokit/webhooks-types": "7.6.1",
-    "axios": "1.15.0"
+    "axios": "1.15.2"
   },
   "devDependencies": {
     "@octokit/action": "8.0.4",
@@ -27,8 +27,8 @@
     "@types/dedent": "0.7.2",
     "@types/node": "24.12.2",
     "esbuild": "0.28.0",
-    "prettier": "3.8.2",
-    "typescript": "6.0.2",
-    "vitest": "4.1.4"
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
   }
 }
