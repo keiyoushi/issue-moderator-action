@@ -45,6 +45,7 @@ export async function checkForDuplicateUrls() {
     core.info('No URLs found in the issue body');
     return;
   }
+  core.info(`Detected URLs in the issue body: ${issueUrls.join(", ")}`)
 
   const client = github.getOctokit(
     core.getInput('repo-token', { required: true }),
@@ -69,6 +70,12 @@ export async function checkForDuplicateUrls() {
   const responses = await Promise.all(promises);
   const filteredIssues = responses.flatMap((response) => response.data.items);
 
+  if (filteredIssues.length === 0) {
+    core.info('No duplicate issues were found via search')
+    return
+  }
+  core.info(`Issues found via search: ${filteredIssues.map((issue) => "#" + issue.number).join(", ")}`)
+
   // Make sure the URL is not from the replies
   const duplicateIssues = filteredIssues
     .filter((currIssue) => {
@@ -82,9 +89,10 @@ export async function checkForDuplicateUrls() {
     .map((currIssue) => '#' + currIssue.number);
 
   if (duplicateIssues.length === 0) {
-    core.info('No duplicate issues were found');
+    core.info('No duplicate issues were found after filtering');
     return;
   }
+  core.info(`Detected duplicates after filtering: ${duplicateIssues.join(", ")}`)
 
   const issueMetadata = {
     owner: repo.owner,
