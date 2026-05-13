@@ -19,16 +19,16 @@
     "@actions/core": "3.0.1",
     "@actions/github": "9.1.1",
     "@octokit/webhooks-types": "7.6.1",
-    "axios": "1.15.2"
+    "axios": "1.16.1"
   },
   "devDependencies": {
     "@octokit/action": "8.0.4",
     "@tsconfig/node24": "24.0.4",
     "@types/dedent": "0.7.2",
-    "@types/node": "24.12.2",
+    "@types/node": "24.12.4",
     "esbuild": "0.28.0",
     "prettier": "3.8.3",
     "typescript": "6.0.3",
-    "vitest": "4.1.5"
+    "vitest": "4.1.6"
   }
 }
