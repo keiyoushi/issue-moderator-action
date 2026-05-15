@@ -71,6 +71,9 @@ If `member-token` is not provided, `repo-token` will be used to check user's mem
 | `duplicate-command`  | Optional duplicate command text.        | Duplicate of #    |
 | `edit-title-command` | Optional edit issue title command text. | Edit title to     |
 | `lock-command`       | Optional lock command text.             | Lock this issue   |
+| `label-command`      | Optional label command text.            | Label             |
+| `unlabel-command`    | Optional unlabel command text.          | Unlabel           |
+| `label-command-users` | Comma or newline separated numeric GitHub user IDs allowed to run the label/unlabel commands even if they are not organization members. Logins are rejected (squatting risk). | |
 
 ---
 
@@ -196,3 +199,24 @@ Usage:
 
 - **Bot-like**: `?lock <off-topic|too heated|resolved|spam>`
 - **Sentence**: `Lock this issue as <off-topic|too heated|resolved|spam>`
+
+### Label / unlabel the issue
+
+These commands add or remove labels on the current issue. Labels are comma
+separated, and only labels that already exist in the repository are applied
+(unknown labels are ignored with a warning).
+
+Usage:
+
+- **Bot-like**: `?label bug, help wanted` / `?unlabel bug`
+- **Sentence**: `Label bug, help wanted` / `Unlabel bug`
+
+Unlike the other commands, these can also be run by non-organization users
+whose numeric GitHub user ID is listed in the `label-command-users` input.
+This lets trusted contributors triage labels without granting them repository
+write/triage permissions.
+
+The input accepts numeric user IDs only — logins are rejected. A login can be
+reused by anyone after the original account is deleted, so a login allowlist
+is vulnerable to account squatting; user IDs are immutable. Find a user's ID
+at `https://api.github.com/users/<login>`.

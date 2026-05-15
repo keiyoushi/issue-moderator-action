@@ -38,6 +38,25 @@ inputs:
     required: false
     default: 'Duplicate of #'
     description: Command to close a duplicate issue
+  label-command:
+    required: false
+    default: Label
+    description: Command to add labels to an issue (comma separated)
+  unlabel-command:
+    required: false
+    default: Unlabel
+    description: Command to remove labels from an issue (comma separated)
+  label-command-users:
+    required: false
+    description: >
+      Comma or newline separated list of numeric GitHub user IDs allowed to
+      run the label and unlabel commands even if they are not organization
+      members. Logins are rejected (and ignored with a warning): a login can
+      be reused after an account is deleted, so a login allowlist is open to
+      account squatting. Get an ID from https://api.github.com/users/<login>.
+      Only labels that already exist in the repository can be set.
+      (Future: a `label-command-allowed-labels` input could restrict this
+      further; see the swap point in src/feature/commands/label.ts.)
 
   blurbs:
     required: false
