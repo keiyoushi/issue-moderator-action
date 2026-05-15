@@ -55,6 +55,26 @@ export async function addLabels(
   core.info(`Added labels: ${labels}`);
 }
 
+export async function removeLabels(
+  client: GitHubClient,
+  params: IssueParameters,
+  labels: string[],
+) {
+  for (const name of labels) {
+    try {
+      await client.rest.issues.removeLabel({ ...params, name });
+      core.info(`Removed label: ${name}`);
+    } catch (error: any) {
+      // 404 means the label is simply not on the issue; ignore it.
+      if (error.status === 404) {
+        core.info(`Label not present, skipping: ${name}`);
+        continue;
+      }
+      throw error;
+    }
+  }
+}
+
 export async function deleteIssue(client: GitHubClient, issueId: string) {
   try {
     await client.graphql(

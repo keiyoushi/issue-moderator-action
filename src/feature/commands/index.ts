@@ -9,12 +9,19 @@ import { handleBlurb } from './blurbs';
 import { closeDuplicateIssue } from './close-duplicate-issue';
 import { deleteIssue } from './delete-issue';
 import { editIssueTitle } from './edit-issue-title';
+import { addIssueLabels, removeIssueLabels } from './label';
 import { lockIssue } from './lock-issue';
 
 type CommandFn = (client: GitHubClient, commentBody: string) => Promise<void>;
 interface Command {
   minimizeComment: boolean;
   fn: CommandFn;
+  /**
+   * Name of an action input holding a comma/newline separated list of GitHub
+   * logins allowed to run this command even when they are not organization
+   * members.
+   */
+  userAllowlistInput?: string;
 }
 
 const BOT_CHARACTERS = '^[/?!]';
@@ -41,7 +48,30 @@ const COMMANDS: Record<string, Command> = {
     minimizeComment: true,
     fn: lockIssue,
   },
+  label: {
+    minimizeComment: true,
+    fn: addIssueLabels,
+    userAllowlistInput: 'label-command-users',
+  },
+  unlabel: {
+    minimizeComment: true,
+    fn: removeIssueLabels,
+    userAllowlistInput: 'label-command-users',
+  },
 };
+
+/**
+ * Parse a comma/newline separated action input into a set of lowercased
+ * GitHub logins.
+ */
+function parseUserAllowlist(input: string): Set<string> {
+  return new Set(
+    input
+      .split(/[\n,]/)
+      .map((user) => user.trim().toLowerCase())
+      .filter((user) => user.length > 0),
+  );
+}
 
 /**
  * Check if the comment has a valid command and execute it.
@@ -79,6 +109,9 @@ export async function checkForCommand() {
     core.getInput('repo-token', { required: true }),
   );
 
+  const command = COMMANDS[commandToRun];
+
+  let isMember = false;
   try {
     const memberToken = core.getInput('member-token');
     const memberClient = memberToken ? github.getOctokit(memberToken) : client;
@@ -87,12 +120,27 @@ export async function checkForCommand() {
       org: repo.owner,
       username: commentUser.login,
     });
+    isMember = true;
   } catch (_) {
     core.info('Could not verify the membership of the comment author');
-    return;
   }
 
-  const command = COMMANDS[commandToRun];
+  if (!isMember) {
+    const allowlist = command.userAllowlistInput
+      ? parseUserAllowlist(core.getInput(command.userAllowlistInput))
+      : new Set<string>();
+
+    if (!allowlist.has(commentUser.login.toLowerCase())) {
+      core.info(
+        `User ${commentUser.login} is not allowed to run the ${commandToRun} command`,
+      );
+      return;
+    }
+
+    core.info(
+      `User ${commentUser.login} allowed via ${command.userAllowlistInput}`,
+    );
+  }
 
   await command.fn(client, commentBody);
 
