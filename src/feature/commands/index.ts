@@ -61,16 +61,31 @@ const COMMANDS: Record<string, Command> = {
 };
 
 /**
- * Parse a comma/newline separated action input into a set of lowercased
- * GitHub logins.
+ * Parse a comma/newline separated action input into a set of numeric GitHub
+ * user IDs.
+ *
+ * Only numeric IDs are accepted. Logins are deliberately rejected: a login
+ * can be changed and, once an account is deleted, reused by anyone, so a
+ * login-based allowlist is vulnerable to account squatting. User IDs are
+ * immutable.
  */
-function parseUserAllowlist(input: string): Set<string> {
-  return new Set(
-    input
-      .split(/[\n,]/)
-      .map((user) => user.trim().toLowerCase())
-      .filter((user) => user.length > 0),
-  );
+function parseUserAllowlist(input: string): Set<number> {
+  const ids = new Set<number>();
+  for (const raw of input.split(/[\n,]/)) {
+    const entry = raw.trim();
+    if (entry.length === 0) {
+      continue;
+    }
+    if (/^[0-9]+$/.test(entry)) {
+      ids.add(Number(entry));
+    } else {
+      core.warning(
+        `Ignoring non-numeric allowlist entry "${entry}": use the numeric ` +
+          `GitHub user ID, not the login, to prevent account squatting`,
+      );
+    }
+  }
+  return ids;
 }
 
 /**
@@ -128,9 +143,9 @@ export async function checkForCommand() {
   if (!isMember) {
     const allowlist = command.userAllowlistInput
       ? parseUserAllowlist(core.getInput(command.userAllowlistInput))
-      : new Set<string>();
+      : new Set<number>();
 
-    if (!allowlist.has(commentUser.login.toLowerCase())) {
+    if (!allowlist.has(commentUser.id)) {
       core.info(
         `User ${commentUser.login} is not allowed to run the ${commandToRun} command`,
       );

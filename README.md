@@ -73,7 +73,7 @@ If `member-token` is not provided, `repo-token` will be used to check user's mem
 | `lock-command`       | Optional lock command text.             | Lock this issue   |
 | `label-command`      | Optional label command text.            | Label             |
 | `unlabel-command`    | Optional unlabel command text.          | Unlabel           |
-| `label-command-users` | Comma or newline separated GitHub logins allowed to run the label/unlabel commands even if they are not organization members. | |
+| `label-command-users` | Comma or newline separated numeric GitHub user IDs allowed to run the label/unlabel commands even if they are not organization members. Logins are rejected (squatting risk). | |
 
 ---
 
@@ -212,5 +212,11 @@ Usage:
 - **Sentence**: `Label bug, help wanted` / `Unlabel bug`
 
 Unlike the other commands, these can also be run by non-organization users
-listed in the `label-command-users` input. This lets trusted contributors
-triage labels without granting them repository write/triage permissions.
+whose numeric GitHub user ID is listed in the `label-command-users` input.
+This lets trusted contributors triage labels without granting them repository
+write/triage permissions.
+
+The input accepts numeric user IDs only — logins are rejected. A login can be
+reused by anyone after the original account is deleted, so a login allowlist
+is vulnerable to account squatting; user IDs are immutable. Find a user's ID
+at `https://api.github.com/users/<login>`.
