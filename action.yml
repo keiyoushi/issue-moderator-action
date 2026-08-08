@@ -81,7 +81,7 @@ inputs:
     description: >
       The URL of the JSON extensions repository.
       Required if `existing-check-enabled` is enabled.
-    default: https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json
+    default: https://raw.githubusercontent.com/keiyoushi/extensions/refs/heads/repo/index.json
   existing-check-comment:
     required: false
     description: >

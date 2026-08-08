@@ -6,14 +6,21 @@ import axios from 'axios';
 import { addDuplicateLabel, shouldIgnore } from '../util/issues';
 import { cleanUrl, urlsFromIssueBody, urlsFromString } from '../util/urls';
 
-interface Extension {
+export interface ExtensionRepository {
+  extensionList: {
+    extensions: Extension[];
+  };
+}
+
+export interface Extension {
   name: string;
-  lang: string;
   sources: Source[];
 }
 
-interface Source {
-  baseUrl: string;
+export interface Source {
+  homeUrl: string;
+  language: string;
+  mirrorUrls?: string[];
 }
 
 /**
@@ -50,7 +57,7 @@ export async function checkForExistingSource() {
     return;
   }
 
-  const sectionsToCeck = JSON.parse(core.getInput('url-search-sections'))
+  const sectionsToCeck = JSON.parse(core.getInput('url-search-sections'));
   const issueUrls = urlsFromIssueBody(issue.body, sectionsToCeck);
   if (issueUrls.length === 0) {
     core.info('No URLs found in the issue body');
@@ -61,33 +68,33 @@ export async function checkForExistingSource() {
     required: true,
   });
 
-  let repository: Extension[] = [];
+  let repository: ExtensionRepository;
   try {
     core.info(`Fetching ${repoJsonUrl}`);
-    const { data } = await axios.get<Extension[]>(repoJsonUrl);
+    const { data } = await axios.get<ExtensionRepository>(repoJsonUrl);
     repository = data;
   } catch (_) {
     core.error('Failed to fetch the repository JSON, aborting.');
     return;
   }
 
-  let existingExtension = null;
-  let requestUrl = "";
+  let existingExtension: Extension | undefined;
+  let existingSource: Source | undefined;
+  let requestUrl = '';
   for (let url of issueUrls) {
-    existingExtension = repository.find((extension) =>
-      extension.sources.some((source) =>
-        urlsFromString(source.baseUrl).includes(cleanUrl(url)),
-      ),
-    );
-
-    if (existingExtension) {
+    const match = findExistingSource(repository, url);
+    if (match) {
+      existingExtension = match.extension;
+      existingSource = match.source;
       requestUrl = url;
-      break;
     }
+    if (existingExtension) break;
   }
 
   if (!existingExtension) {
-    core.info(`No existing extensions were found for the provided URLs: ${issueUrls.join(", ")}.`);
+    core.info(
+      `No existing extensions were found for the provided URLs: ${issueUrls.join(', ')}.`,
+    );
     return;
   }
 
@@ -104,7 +111,7 @@ export async function checkForExistingSource() {
   };
 
   const extensionName = existingExtension.name.replace('Tachiyomi: ', '');
-  const extensionLang = findLangName(existingExtension.lang);
+  const extensionLang = findLangName(existingSource!.language);
 
   await addDuplicateLabel(client, issueMetadata);
   await client.rest.issues.update({
@@ -121,6 +128,20 @@ export async function checkForExistingSource() {
       .replace(/\{extensionName\}/g, extensionName)
       .replace(/\{extensionLang\}/g, extensionLang),
   });
+}
+
+export function findExistingSource(
+  repository: ExtensionRepository,
+  requestedUrl: string,
+) {
+  for (const extension of repository.extensionList.extensions) {
+    const source = extension.sources.find((source) =>
+      [source.homeUrl, ...(source.mirrorUrls ?? [])].some((sourceUrl) =>
+        urlsFromString(sourceUrl).includes(cleanUrl(requestedUrl)),
+      ),
+    );
+    if (source) return { extension, source };
+  }
 }
 
 function findLangName(langCode: string): string {
