@@ -14,6 +14,7 @@ export interface ExtensionRepository {
 
 export interface Extension {
   name: string;
+  versionName: string;
   sources: Source[];
 }
 
@@ -111,6 +112,7 @@ export async function checkForExistingSource() {
   };
 
   const extensionName = existingExtension.name.replace('Tachiyomi: ', '');
+  const extensionVersion = existingExtension.versionName;
   const extensionLang = findLangName(existingSource!.language);
 
   await addDuplicateLabel(client, issueMetadata);
@@ -126,6 +128,7 @@ export async function checkForExistingSource() {
       .getInput('existing-check-comment')
       .replace(/\{requestUrl\}/g, requestUrl)
       .replace(/\{extensionName\}/g, extensionName)
+      .replace(/\{extensionVersion\}/g, extensionVersion)
       .replace(/\{extensionLang\}/g, extensionLang),
   });
 }
