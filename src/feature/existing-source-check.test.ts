@@ -10,6 +10,7 @@ const repository: ExtensionRepository = {
     extensions: [
       {
         name: 'Example Extension',
+        versionName: '1.2.3',
         sources: [
           {
             homeUrl: 'https://example.org',
@@ -36,6 +37,7 @@ describe('findExistingSource', () => {
     const match = findExistingSource(repository, 'mirror.example.org');
 
     expect(match?.extension.name).toBe('Example Extension');
+    expect(match?.extension.versionName).toBe('1.2.3');
     expect(match?.source.language).toBe('en');
   });
 });
