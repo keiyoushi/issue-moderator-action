@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@octokit/action": "8.0.4",
-    "@tsconfig/node24": "24.0.4",
+    "@tsconfig/node26": "26.0.0",
     "@types/dedent": "0.7.2",
     "@types/node": "26.1.2",
     "esbuild": "0.27.7",
